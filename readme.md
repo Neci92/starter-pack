@@ -1,5 +1,7 @@
 # Starter pack for basic Frontend development based on Gulp.js
 
+Install node modules with `npm install`.
+
 ## Images
 All images in src/images will be optimized and moved to dist/images
 
