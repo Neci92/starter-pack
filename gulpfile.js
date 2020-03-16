@@ -7,6 +7,7 @@ const sass = require('gulp-sass');
 const cleanCss = require('gulp-clean-css');
 const imageMin = require('gulp-imagemin');
 const browserSync = require('browser-sync').create();
+const clean = require('gulp-clean');
 
 function styles() {
     return src('src/scss/**/*.scss')
@@ -53,7 +54,7 @@ function copyFonts() {
 }
 
 exports.init = copyHtml;
-
+exports.cleanDist = cleanDist;
 exports.watch = function () {
     browserSync.init({
         server: {
