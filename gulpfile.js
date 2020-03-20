@@ -8,6 +8,7 @@ const cleanCss = require('gulp-clean-css');
 const imageMin = require('gulp-imagemin');
 const browserSync = require('browser-sync').create();
 const clean = require('gulp-clean');
+const htmlmin = require('gulp-htmlmin');
 
 function styles() {
     return src('src/scss/**/*.scss')
@@ -19,7 +20,7 @@ function styles() {
 }
 
 function scripts() {
-    return src('src/js/**/*.js')
+    return src(['src/js/**/*.js', '!src/js/vendor/*'])
         .pipe(babel({
             presets: ['@babel/env']
         }))
@@ -27,6 +28,16 @@ function scripts() {
         .pipe(uglify())
         .pipe(rename({ extname: '.min.js' }))
         .pipe(dest('dist/js'));
+}
+
+function copyVendorScripts() {
+    return src('src/js/vendor/*')
+        .pipe(dest('dist/js/vendor'))
+}
+
+function copyFavicon() {
+    return src('./')
+        .pipe(dest('dist'));
 }
 
 function optimizeImages() {
@@ -37,6 +48,7 @@ function optimizeImages() {
 
 function copyHtml() {
     return src('src/*.html')
+        .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(dest('dist'));
 }
 
@@ -67,4 +79,4 @@ exports.watch = function () {
     watch('src/images', series(optimizeImages, browserSync.reload));
 }
 
-exports.default = series(cleanDist, parallel(scripts, styles, optimizeImages, copyFonts, copyHtml));
+exports.default = series(cleanDist, parallel(scripts, styles, optimizeImages, copyFonts, copyHtml, copyVendorScripts, copyFavicon));
