@@ -65,9 +65,7 @@ function copyFonts() {
     }).pipe(dest('dist/'));
 }
 
-exports.init = copyHtml;
-exports.cleanDist = cleanDist;
-exports.watch = function () {
+function watchForChanges() {
     browserSync.init({
         server: {
             baseDir: './dist'
@@ -76,7 +74,11 @@ exports.watch = function () {
     watch('src/**/*.html').on('change', series(copyHtml, browserSync.reload));
     watch('src/scss/**/*.scss', styles);
     watch('src/js/**/*.js').on('change', series(scripts, browserSync.reload));
-    watch('src/images', series(optimizeImages, browserSync.reload));
+    watch('src/images/*', series(optimizeImages, browserSync.reload));
 }
 
+exports.init = copyHtml;
+exports.cleanDist = cleanDist;
+
+exports.watch = series(cleanDist, parallel(scripts, styles, optimizeImages, copyFonts, copyHtml, copyVendorScripts, copyFavicon), watchForChanges);
 exports.default = series(cleanDist, parallel(scripts, styles, optimizeImages, copyFonts, copyHtml, copyVendorScripts, copyFavicon));
