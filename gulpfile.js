@@ -9,9 +9,10 @@ const imageMin = require('gulp-imagemin');
 const browserSync = require('browser-sync').create();
 const clean = require('gulp-clean');
 const htmlmin = require('gulp-htmlmin');
+const webpack = require('webpack-stream');
 
 function styles() {
-    return src('src/scss/**/*.scss')
+    return src('src/scss/style.scss')
         .pipe(concat('style.min.scss'))
         .pipe(sass().on('error', sass.logError))
         .pipe(cleanCss({ compatibility: 'ie11' }))
@@ -20,24 +21,30 @@ function styles() {
 }
 
 function scripts() {
-    return src(['src/js/**/*.js', '!src/js/vendor/*'])
+    return src(['src/js/app.js'])
         .pipe(babel({
             presets: ['@babel/env']
         }))
-        .pipe(concat('main.js'))
+        .pipe(webpack())
+        // .pipe(concat('main.js'))
         .pipe(uglify())
-        .pipe(rename({ extname: '.min.js' }))
+        .pipe(rename( 'app.min.js' ))
         .pipe(dest('dist/js'));
 }
 
-function copyVendorScripts() {
-    return src('src/js/vendor/*')
-        .pipe(dest('dist/js/vendor'))
-}
+// function copyVendorScripts() {
+//     return src('src/js/vendor/*')
+//         .pipe(dest('dist/js/vendor'))
+// }
 
 function copyFavicon() {
     return src('./')
         .pipe(dest('dist'));
+}
+
+function copyImages() {
+    return src('src/images/**/*.{png,jpg,jpeg,svg}')
+        .pipe(dest('dist/images'));
 }
 
 function optimizeImages() {
@@ -74,11 +81,11 @@ function watchForChanges() {
     watch('src/**/*.html').on('change', series(copyHtml, browserSync.reload));
     watch('src/scss/**/*.scss', styles);
     watch('src/js/**/*.js').on('change', series(scripts, browserSync.reload));
-    watch('src/images/*', series(optimizeImages, browserSync.reload));
+    watch('src/images/*', series(copyImages, browserSync.reload));
 }
 
 exports.init = copyHtml;
 exports.cleanDist = cleanDist;
 
-exports.watch = series(cleanDist, parallel(scripts, styles, optimizeImages, copyFonts, copyHtml, copyVendorScripts, copyFavicon), watchForChanges);
-exports.default = series(cleanDist, parallel(scripts, styles, optimizeImages, copyFonts, copyHtml, copyVendorScripts, copyFavicon));
+exports.watch = series(cleanDist, parallel(scripts, styles, copyImages, copyFonts, copyHtml, copyFavicon), watchForChanges);
+exports.default = series(cleanDist, parallel(scripts, styles, optimizeImages, copyFonts, copyHtml, copyFavicon));
