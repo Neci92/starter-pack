@@ -18,12 +18,12 @@ function styles() {
         .pipe(browserSync.stream());
 }
 
-function scripts() {
+async function scripts() {
     return src(['src/js/app.js'])
+        .pipe(webpack(require('./webpack.config')))
         .pipe(babel({
             presets: ['@babel/env']
         }))
-        .pipe(webpack())
         .pipe(uglify())
         .pipe(rename( 'app.min.js' ))
         .pipe(dest('dist/js'));
