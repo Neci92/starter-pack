@@ -1,6 +1,5 @@
 const { series, src, dest, watch, parallel } = require('gulp');
 const babel = require('gulp-babel');
-const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
@@ -13,7 +12,6 @@ const webpack = require('webpack-stream');
 
 function styles() {
     return src('src/scss/style.scss')
-        .pipe(concat('style.min.scss'))
         .pipe(sass().on('error', sass.logError))
         .pipe(cleanCss({ compatibility: 'ie11' }))
         .pipe(dest('dist/css'))
@@ -26,16 +24,10 @@ function scripts() {
             presets: ['@babel/env']
         }))
         .pipe(webpack())
-        // .pipe(concat('main.js'))
         .pipe(uglify())
         .pipe(rename( 'app.min.js' ))
         .pipe(dest('dist/js'));
 }
-
-// function copyVendorScripts() {
-//     return src('src/js/vendor/*')
-//         .pipe(dest('dist/js/vendor'))
-// }
 
 function copyFavicon() {
     return src('./')
@@ -81,7 +73,7 @@ function watchForChanges() {
     watch('src/**/*.html').on('change', series(copyHtml, browserSync.reload));
     watch('src/scss/**/*.scss', styles);
     watch('src/js/**/*.js').on('change', series(scripts, browserSync.reload));
-    watch('src/images/*', series(copyImages, browserSync.reload));
+    watch('src/images/*.{png,jpg,jpeg,svg}', series(copyImages, browserSync.reload));
 }
 
 exports.init = copyHtml;

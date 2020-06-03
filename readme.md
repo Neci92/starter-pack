@@ -3,13 +3,13 @@
 Install node modules with `npm install`.
 
 ## Images
-All images in src/images will be optimized and moved to dist/images
+All images in src/images will be moved to dist/images. If ```npm run prod``` is ran images will also be optimized. 
 
 ## Javascript Files
-All js files that are put inside of src/js folder will be concatinated, minified, transpiled to ES5 and moved to dist/js folder by name main.min.js(you should include this file at the bottom of your index.html)
+The src/js/app.js is the main file in this app. For modularity you can organize smaller chunks of code in different folders and import them into app.js. To include this into you HTML file you should add js/app.min.js at the bottom of your page. This file will be minified and transpiled to ES5.
 
 ## SCSS - CSS files
-Similarely to js files, all scss files in src/scss folder will be concatinated, minified, optimized for older browsers, transpiled to css and moved to dist/css folder by the name style.min.css (you should include this file in the head of your index.html). All globals should be put in top level folder. If you want to structure differently consider compiler will go alphabetically throught top level files first(if you have file named all.scss it will not be able to use variables and mixins from base.scss on same folder level)
+The src/scss/style.scss is the main stylesheet of the app. For modularity you can organize your files in partials and import them into style.scss. To add styles into your HTML you should include link to css/style.css inside of your head.
 
 ## Live reload
 Open root folder in terminal and run `npm run dev` to start watching over changes in your project. This will start server with live reload and open it in you default browser. If port 3000 is not taken you will get a message in terminal:
