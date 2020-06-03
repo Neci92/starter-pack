@@ -1,3 +1,3 @@
 export default function showName(name) {
-    console.log(name);
+    document.getElementById('message').textContent = name;
 }

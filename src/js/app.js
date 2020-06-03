@@ -1,3 +1,3 @@
 import Show from './modules/module1';
 
-Show('Aleksa');
+Show('Fale ti loaderi za CSS');
