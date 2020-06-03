@@ -20,6 +20,9 @@ Examples:
 
 CSS and SCSS files must have extension added, while it's optional for JavaScript files.
 
+To use jQuery you need to add this import to the top of the module that is using jQuery
+```import $ from 'jquery'```
+
 ## Live reload
 Open root folder in terminal and run `npm run dev` to start watching over changes in your project. This will start server with live reload and open it in you default browser. If port 3000 is not taken you will get a message in terminal:
 
